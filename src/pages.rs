@@ -38,3 +38,12 @@ where
     };
     Ok(data)
 }
+
+/// 分页查询公用结构
+#[derive(Clone, Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct PageQuery<T> {
+    pub current: u64,
+    pub page_size: u64,
+    pub data: T,
+}
