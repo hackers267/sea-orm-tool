@@ -11,6 +11,20 @@ pub struct PageData<T> {
     pub page_size: u64,
 }
 
+pub trait ToPageData<T> {
+    async fn to_page_data(self, current: u64, page_size: u64) -> Result<PageData<T>, DbErr>;
+}
+
+impl<'db, C, S, T> ToPageData<T> for Paginator<'db, C, S>
+where
+    C: ConnectionTrait,
+    S: SelectorTrait<Item = T> + 'db,
+{
+    async fn to_page_data(self, current: u64, page_size: u64) -> Result<PageData<T>, DbErr> {
+        to_page_data(self, current, page_size).await
+    }
+}
+
 /// 转换paginator为PageData结构
 pub async fn to_page_data<'db, C, S, T>(
     mut paginator: Paginator<'db, C, S>,
